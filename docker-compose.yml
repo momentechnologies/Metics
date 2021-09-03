@@ -32,6 +32,7 @@ services:
       - "443:443"
 
   api:
+    command: "/bin/sh -c '/start-scripts/wait-for-multiple.sh postgres:5432; yarn; yarn migrate; yarn start:dev'"
     build:
       context: ./sourcecode/api
       dockerfile: Dockerfile
@@ -52,6 +53,7 @@ services:
       - ./sourcecode/api/.env.defaults:/app/.env.defaults
       - ./sourcecode/api/tsconfig.json:/app/tsconfig.json
       - ./sourcecode/api/tslint.json:/app/tslint.json
+      - ./localSetup/helpers/start-scripts:/start-scripts
 
   frontend:
     build:

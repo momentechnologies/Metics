@@ -2,4 +2,5 @@ import { Request } from 'express';
 
 export interface CustomRequest extends Request {
     context: string;
+    user: any;
 }
