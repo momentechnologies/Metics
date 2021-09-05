@@ -2,17 +2,14 @@ import React from 'react';
 import { gql, useApolloClient } from '@apollo/client';
 import { useQuery } from '@apollo/client';
 import startupContext from '../contexts/startup.js';
-import ConfigContainer, { configFragment } from './ConfigContainer';
+import ConfigContainer from './ConfigContainer';
 import { authFragment } from './AuthProvider/AuthProviderContainer';
 import getGraphqlError from '../helpers/getGraphqlError';
 
 const QUERY = gql`
     query StartupQuery {
-        ...ConfigFragment
         ...AuthFragment
-        ...HeaderFragment
     }
-    ${configFragment}
     ${authFragment}
 `;
 

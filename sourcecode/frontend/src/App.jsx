@@ -12,6 +12,8 @@ import './index.scss';
 import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
 import ScrollToTop from './components/ScrollToTop.jsx';
+import Theme from './containers/Theme';
+import StartupContainer from './containers/StartupContainer';
 
 const FallbackComponent = () => (
     <div>
@@ -27,20 +29,24 @@ const App = ({
     acceptedCookies = () => null,
 }) => (
     <Sentry.ErrorBoundary showDialog fallback={FallbackComponent}>
-        <AppContext.Provider
-            value={{
-                getNow,
-                cookies,
-                notFoundEvent,
-                acceptedCookies,
-            }}
-        >
-            <ScrollToTop>
-                <AuthProvider>
-                    <Routes />
-                </AuthProvider>
-            </ScrollToTop>
-        </AppContext.Provider>
+        <StartupContainer>
+            <AppContext.Provider
+                value={{
+                    getNow,
+                    cookies,
+                    notFoundEvent,
+                    acceptedCookies,
+                }}
+            >
+                <Theme>
+                    <ScrollToTop>
+                        <AuthProvider>
+                            <Routes />
+                        </AuthProvider>
+                    </ScrollToTop>
+                </Theme>
+            </AppContext.Provider>
+        </StartupContainer>
     </Sentry.ErrorBoundary>
 );
 

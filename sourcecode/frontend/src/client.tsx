@@ -13,14 +13,14 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import ApolloClientUtils from './helpers/apolloClient';
 import appConfig from './config/app.js';
-import tracking from './helpers/tracking.js';
+// import tracking from './helpers/tracking.js';
 import './reportWebVitals';
 
 import { ignoreErrors } from './helpers/sentry.js';
 
 const apolloClientUtils = new ApolloClientUtils();
 
-tracking.startSession();
+// tracking.startSession();
 store.addPlugin(expirePlugin);
 
 if (appConfig.isProduction && appConfig.sentryUrl) {

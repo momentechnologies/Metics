@@ -1,12 +1,16 @@
 import App from './App';
 import React from 'react';
-import { ApolloProvider, ApolloClient } from '@apollo/client';
-import { createHttpLink } from 'apollo-link-http';
+import {
+    ApolloProvider,
+    ApolloClient,
+    createHttpLink,
+    InMemoryCache,
+    ApolloLink,
+} from '@apollo/client';
 import { StaticRouter } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import express from 'express';
 import path from 'path';
-import { InMemoryCache } from 'apollo-cache-inmemory';
 import { renderToStringWithData } from '@apollo/client/react/ssr';
 import { ChunkExtractor, ChunkExtractorManager } from '@loadable/server';
 import { ServerStyleSheet } from 'styled-components';
@@ -16,7 +20,6 @@ import * as Sentry from '@sentry/node';
 import moment from 'moment';
 import cookieParser from 'cookie-parser';
 import getSitemap from './server/getSitemap.js';
-import { ApolloLink } from 'apollo-link';
 import { parse } from 'set-cookie-parser';
 import { ignoreErrors } from './helpers/sentry.js';
 

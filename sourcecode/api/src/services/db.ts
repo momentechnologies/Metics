@@ -1,6 +1,6 @@
 import PG from 'pg';
 import dbConfig from '../config/db';
-import knex from 'knex';
+import knex, { Knex } from 'knex';
 import chalk from 'chalk';
 import moment from 'moment';
 import path from 'path';
@@ -61,11 +61,22 @@ queryBuilder
 export default queryBuilder;
 
 export const dbHelpers = {
-    query: async (text, params) => {
-        const start = Date.now();
-        const res = await pool.query(text, params);
-        const duration = Date.now() - start;
-        logger.debug(chalk.blue(`DB query - ${duration}ms - ${text}`));
-        return res;
+    create: async (db: Knex, tableName: string, data: any) => {
+        const rows = await db(tableName).insert(data).returning('*');
+
+        return rows[0];
     },
+    updateId: async (db: Knex, tableName: string, id: number, data: any) => {
+        const rows = await db(tableName)
+            .where('id', id)
+            .update(data)
+            .returning('*');
+
+        return rows[0];
+    },
+    isUniqueViolation: (error, uniqueKeyName: string) =>
+        error &&
+        error.code &&
+        parseInt(error.code) === 23505 &&
+        (!uniqueKeyName || error.constraint === uniqueKeyName),
 };

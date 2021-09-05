@@ -1,6 +1,6 @@
 import ApiException, { errorResponse } from './apiException';
 
-export default class NotFound extends ApiException {
+export default class NotFoundException extends ApiException {
     parameter;
 
     constructor(parameter) {

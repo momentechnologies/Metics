@@ -1,8 +1,10 @@
-import { ApolloClient } from '@apollo/client';
-import { HttpLink } from 'apollo-link-http';
-import { ApolloLink } from 'apollo-link';
+import {
+    ApolloClient,
+    ApolloLink,
+    HttpLink,
+    InMemoryCache,
+} from '@apollo/client';
 import { onError } from 'apollo-link-error';
-import { InMemoryCache } from 'apollo-cache-inmemory';
 import apiConfig from '../config/api';
 
 export default class ApolloClientHelper {

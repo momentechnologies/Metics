@@ -1,16 +1,20 @@
 import _ from 'lodash';
 import * as SchemaTools from '@graphql-tools/schema';
-import * as MergeGraphqlSchemas from 'merge-graphql-schemas';
+import { mergeTypeDefs } from '@graphql-tools/merge';
 
-import * as authSchema from './auth';
+import * as auth from './auth';
+import directives from './directives';
+import * as externalTypes from './externalTypes';
+import * as group from './group';
+import * as organization from './organization';
+import * as project from './project';
+import * as user from './user';
 
-const get = (services) => ({
-    typeDefs: MergeGraphqlSchemas.mergeTypes(
-        [...services.map((s) => s.schema).filter((s) => s)],
-        {
-            all: true,
-        }
-    ),
+const get = (directiveTypes, services) => ({
+    typeDefs: mergeTypeDefs([
+        ...directiveTypes,
+        ...services.map((s) => s.schema).filter((s) => s),
+    ]),
     resolvers: services.reduce(
         (resolvers, service) =>
             service.resolvers
@@ -20,4 +24,15 @@ const get = (services) => ({
     ),
 });
 
-export default SchemaTools.makeExecutableSchema(get([authSchema]));
+export default directives.decorate(
+    SchemaTools.makeExecutableSchema(
+        get(directives.types, [
+            auth,
+            externalTypes,
+            group,
+            organization,
+            project,
+            user,
+        ])
+    )
+);

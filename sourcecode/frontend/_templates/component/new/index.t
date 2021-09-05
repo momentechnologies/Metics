@@ -1,7 +1,7 @@
 ---
-to: src/<%=path%>/<%=name%>/index.js
+to: src/<%=path%>/<%=name%>/index.ts
 ---
-export { default } from './<%=name%>Container.jsx';
+export { default } from './<%=name%>Container';
 
 
 

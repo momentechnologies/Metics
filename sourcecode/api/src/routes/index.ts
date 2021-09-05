@@ -1,7 +1,7 @@
 import express from 'express';
 import graphqlRoutes from '../graphql';
-// import addUserToRequest from '../middlewares/addUserToRequest';
 import addContextToRequest from '../middlewares/addContextToRequest';
+import addUserToRequest from '../middlewares/addUserToRequest';
 
 const { Router } = express;
 
@@ -20,11 +20,6 @@ apiRouter.get('/', (req, res) => {
     });
 });
 
-router.use(
-    '/api/v1',
-    // addUserToRequest,
-    addContextToRequest,
-    apiRouter
-);
+router.use('/api/v1', addUserToRequest, addContextToRequest, apiRouter);
 
 export default router;

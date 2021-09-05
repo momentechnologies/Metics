@@ -12,30 +12,10 @@ export const authFragment = gql`
                 firstName
                 lastName
                 email
-                isAdmin
                 emailConfirmed
-                phone
-                newsletter
-                tawkToHash
-                intercomHash
-                reward {
-                    isEnabled
-                    pointsLast12months
-                }
-                address {
+                organizations {
                     id
-                    address
-                    postalCode
-                    postalPlace
-                    country
-                    co
-                }
-                stripeCards {
-                    paymentMethodId
-                    brand
-                    last4
-                    expYear
-                    expMonth
+                    name
                 }
             }
         }

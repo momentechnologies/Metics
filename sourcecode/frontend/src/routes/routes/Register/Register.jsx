@@ -1,8 +1,17 @@
 import React from 'react';
 import { useForm, Controller } from 'react-hook-form';
-import { Button, Container, Grid, TextField } from '@material-ui/core';
+import {
+    Button,
+    Checkbox,
+    Container,
+    FormControlLabel,
+    FormHelperText,
+    Grid,
+    TextField,
+} from '@material-ui/core';
 import Joi from 'joi';
 import { joiResolver } from '@hookform/resolvers/joi';
+import useMergeFormAndMutationErrors from '../../../hooks/useMergeFormAndMutationErrors';
 
 const schema = Joi.object({
     organizationName: Joi.string().min(2).max(100).required(),
@@ -13,9 +22,10 @@ const schema = Joi.object({
         .max(255)
         .required(),
     password: Joi.string().min(8).max(255).required(),
+    acceptTermsAndPolicy: Joi.boolean().invalid(false).required(),
 });
 
-const Register = () => {
+const Register = ({ register, status }) => {
     const {
         control,
         handleSubmit,
@@ -23,8 +33,14 @@ const Register = () => {
     } = useForm({
         resolver: joiResolver(schema),
     });
-    const onSubmit = (data) => console.log(data);
 
+    const onSubmit = (data) => {
+        register({
+            data,
+        });
+    };
+
+    const mergedErrors = useMergeFormAndMutationErrors(errors, status.error);
     return (
         <Container maxWidth="sm">
             <form onSubmit={handleSubmit(onSubmit)}>
@@ -39,10 +55,10 @@ const Register = () => {
                                     {...field}
                                     fullWidth
                                     label="Name of your organization"
-                                    error={errors.organizationName}
+                                    error={mergedErrors.organizationName}
                                     helperText={
-                                        errors.organizationName &&
-                                        'Organization name is required and must be between 2 and 100 characters long'
+                                        mergedErrors.organizationName &&
+                                        mergedErrors.organizationName[0]
                                     }
                                 />
                             )}
@@ -58,10 +74,10 @@ const Register = () => {
                                     {...field}
                                     fullWidth
                                     label="First name"
-                                    error={errors.firstName}
+                                    error={mergedErrors.firstName}
                                     helperText={
-                                        errors.firstName &&
-                                        'First name is required and must be between 2 and 100 characters long'
+                                        mergedErrors.firstName &&
+                                        mergedErrors.firstName[0]
                                     }
                                 />
                             )}
@@ -77,10 +93,10 @@ const Register = () => {
                                     {...field}
                                     fullWidth
                                     label="Last name"
-                                    error={errors.lastName}
+                                    error={mergedErrors.lastName}
                                     helperText={
-                                        errors.lastName &&
-                                        'First name is required and must be between 2 and 100 characters long'
+                                        mergedErrors.lastName &&
+                                        mergedErrors.lastName[0]
                                     }
                                 />
                             )}
@@ -96,10 +112,10 @@ const Register = () => {
                                     {...field}
                                     fullWidth
                                     label="Email"
-                                    error={errors.email}
+                                    error={mergedErrors.email}
                                     helperText={
-                                        errors.email &&
-                                        'Email is required and must be valid and must be no longer than 255 characters'
+                                        mergedErrors.email &&
+                                        mergedErrors.email[0]
                                     }
                                 />
                             )}
@@ -116,11 +132,30 @@ const Register = () => {
                                     fullWidth
                                     label="Password"
                                     type="password"
-                                    error={errors.password}
+                                    error={mergedErrors.password}
                                     helperText={
-                                        errors.password &&
-                                        'Password is required and must be between 8 and 255 characters long'
+                                        mergedErrors.password &&
+                                        mergedErrors.password[0]
                                     }
+                                />
+                            )}
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Controller
+                            name="acceptTermsAndPolicy"
+                            control={control}
+                            defaultValue=""
+                            render={({ field }) => (
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            {...field}
+                                            name="acceptTermsAndPolicy"
+                                            color="primary"
+                                        />
+                                    }
+                                    label="I agree to the terms of service and privacy policy"
                                 />
                             )}
                         />
@@ -135,6 +170,16 @@ const Register = () => {
                             Create account
                         </Button>
                     </Grid>
+                    {errors.acceptTermsAndPolicy && (
+                        <FormHelperText error>
+                            You must accept in order to create an account
+                        </FormHelperText>
+                    )}
+                    {status.error && (
+                        <FormHelperText error>
+                            {status.error.message}
+                        </FormHelperText>
+                    )}
                 </Grid>
             </form>
         </Container>

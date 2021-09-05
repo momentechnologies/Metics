@@ -6,10 +6,24 @@ export const validationTypes = {
     NOT_FOUND: 3,
 };
 
-export default class Validation extends ApiException {
-    errors;
+export const validationError = (
+    key: string,
+    message: string,
+    uid: number = validationTypes.INVALID_PARAMETER
+) => ({
+    key,
+    message,
+    uid,
+});
 
-    constructor(errors = []) {
+type ValidationErrorReturnType = ReturnType<typeof validationError>;
+
+export default class ValidationException extends ApiException {
+    errors: ValidationErrorReturnType[];
+
+    constructor(
+        errors: ValidationErrorReturnType | ValidationErrorReturnType[] = []
+    ) {
         super('The request is not valid');
         this.shouldReport = false;
 
@@ -30,13 +44,3 @@ export default class Validation extends ApiException {
         });
     }
 }
-
-export const validationError = (
-    key,
-    message,
-    uid = validationTypes.INVALID_PARAMETER
-) => ({
-    key,
-    message,
-    uid,
-});

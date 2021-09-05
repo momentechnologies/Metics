@@ -2,7 +2,6 @@ import React from 'react';
 import * as Sentry from '@sentry/react';
 
 import AuthContext from '../../contexts/auth';
-import tracking from '../../helpers/tracking.js';
 import appConfig from '../../config/app.js';
 
 const AuthProvider = ({
@@ -29,7 +28,6 @@ const AuthProvider = ({
                     email: user.email,
                 });
             });
-            tracking.authenticated(user);
         }
     }, [user]);
 
@@ -69,8 +67,8 @@ const AuthProvider = ({
             value={{
                 isAuthenticated: !!user,
                 isAuthenticating: !isLoggedOut && loading,
-                isAdmin: user && user.isAdmin,
                 user,
+                organizations: user ? user.organizations : [],
                 refetch,
                 logout,
             }}
