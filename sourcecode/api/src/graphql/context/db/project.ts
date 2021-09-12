@@ -10,6 +10,16 @@ export default (db) => {
                 projects.find((project) => project.id === projectId)
             );
         });
+    const getForGroup = () =>
+        new DataLoader(async (groupIds: string[]) => {
+            const projects = await db('projects').whereIn('groupId', groupIds);
+
+            return groupIds.map((groupId) =>
+                projects.filter(
+                    (group) => String(group.groupId) === String(groupId)
+                )
+            );
+        });
     const create = async (project: { name: string; groupId: number }) =>
         dbHelpers.create(db, 'projects', project);
     const update = async (id, project) =>
@@ -17,6 +27,7 @@ export default (db) => {
 
     return {
         getById: getById(),
+        getForGroup: getForGroup(),
         create,
         update,
     };

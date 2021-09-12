@@ -1,7 +1,15 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
 
-const MyHelmet = ({ title, description, children }) => {
+const MyHelmet = ({
+    title,
+    description,
+    children,
+}: {
+    title?: string | string[];
+    description?: string;
+    children: any;
+}) => {
     let parts;
     if (Array.isArray(title)) {
         parts = [...title];

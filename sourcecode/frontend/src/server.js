@@ -15,28 +15,15 @@ import { renderToStringWithData } from '@apollo/client/react/ssr';
 import { ChunkExtractor, ChunkExtractorManager } from '@loadable/server';
 import { ServerStyleSheet } from 'styled-components';
 import serverConfig from './config/server.js';
-import appConfig from './config/app.js';
-import * as Sentry from '@sentry/node';
+import { ServerStyleSheets } from '@material-ui/styles';
 import moment from 'moment';
 import cookieParser from 'cookie-parser';
 import getSitemap from './server/getSitemap.js';
 import { parse } from 'set-cookie-parser';
-import { ignoreErrors } from './helpers/sentry.js';
 
 const assets = require(process.env.RAZZLE_ASSETS_MANIFEST);
 
 const server = express();
-
-if (appConfig.isProduction && appConfig.sentrySSRUrl) {
-    Sentry.init({
-        dsn: appConfig.sentrySSRUrl,
-        release: appConfig.releaseHash,
-        environment: appConfig.environment,
-        ignoreErrors: ignoreErrors,
-    });
-
-    server.use(Sentry.Handlers.requestHandler());
-}
 
 server
     .disable('x-powered-by')
@@ -112,7 +99,7 @@ server
 
         try {
             const context = {};
-            const sheet = new ServerStyleSheet();
+            const sheets = new ServerStyleSheets();
             const now = moment();
             let status = 200;
 
@@ -122,7 +109,7 @@ server
                 entrypoints: ['client'],
             });
 
-            const SetupApp = sheet.collectStyles(
+            const SetupApp = sheets.collect(
                 <ChunkExtractorManager extractor={extractor}>
                     <ApolloProvider client={req.apolloClient}>
                         <StaticRouter context={context} location={req.url}>
@@ -159,7 +146,7 @@ server
                             res,
                             content,
                             initialState,
-                            sheet,
+                            sheets,
                             assets,
                             helmet,
                             envVariables,
@@ -171,12 +158,11 @@ server
                     })
                     .catch((err) => {
                         console.error(err);
-                        Sentry.captureException(err);
 
                         render({
                             res,
                             content: '',
-                            sheet,
+                            sheets,
                             assets,
                             envVariables,
                             status,
@@ -195,7 +181,6 @@ server
             }
         } catch (err) {
             console.error(err);
-            Sentry.captureException(err);
             render({ res, content: '', assets, envVariables });
         }
     });
@@ -206,8 +191,7 @@ const render = ({
     res,
     content,
     initialState = {},
-    sheet,
-    assets,
+    sheets,
     helmet,
     envVariables = {},
     status = 200,
@@ -251,7 +235,11 @@ const render = ({
         </script>
         <!-- End Google Tag Manager -->
         <script async src="https://js.stripe.com/v3/"></script>
-        ${sheet ? sheet.getStyleTags() : ''}
+        ${
+            sheets && sheets.toString()
+                ? `<style id='jss-ssr'>${sheets.toString()}</style>`
+                : ''
+        }
         ${linkTags}
         ${styleTags}
     </head>

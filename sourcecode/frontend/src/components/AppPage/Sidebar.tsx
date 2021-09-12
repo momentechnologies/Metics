@@ -45,8 +45,9 @@ const Sidebar = () => {
     const links = [
         {
             name: organization.name,
-            to: `${paths.root}/dashboard`,
+            to: `${paths.root}`,
             icon: <Dashboard />,
+            subLinks: [{ name: 'Billing', to: '/billing' }],
         },
         {
             name: 'Projects',
@@ -57,7 +58,6 @@ const Sidebar = () => {
             name: 'Stats',
             to: `${paths.root}/stats`,
             icon: <Assessment />,
-            subLinks: [{ name: 'Søk', to: '/searches' }],
         },
     ];
 

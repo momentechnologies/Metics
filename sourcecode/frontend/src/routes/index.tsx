@@ -8,6 +8,7 @@ import CookieConsent from '../components/CookieConsent.jsx';
 import NotFound from '../components/NotFound.jsx';
 import windowHelper from '../helpers/window';
 import AuthContext from '../contexts/auth';
+import { BreadcrumbPath } from '../contexts/breadcrumb';
 import App from './routes/App';
 
 const Content = styled.div`
@@ -22,7 +23,7 @@ const Routes = () => {
     const { isAuthenticated } = React.useContext(AuthContext);
 
     return (
-        <>
+        <BreadcrumbPath name="Metics" path="/">
             <Helmet>
                 <meta charSet="utf-8" />
                 <link
@@ -64,7 +65,7 @@ const Routes = () => {
                 )}
             </Content>
             <CookieConsent />
-        </>
+        </BreadcrumbPath>
     );
 };
 

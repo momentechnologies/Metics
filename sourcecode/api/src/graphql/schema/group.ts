@@ -6,6 +6,7 @@ export const schema = gql`
         id: ID!
         name: String!
         organizationId: ID!
+        projects: [Project!]!
     }
 `;
 

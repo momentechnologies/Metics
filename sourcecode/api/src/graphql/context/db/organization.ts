@@ -1,21 +1,24 @@
 import DataLoader from 'dataloader';
 import { dbHelpers } from '../../../services/db';
+import { Organization } from '../../../types/db/Organization';
 
 export default (db) => {
     const getById = () =>
-        new DataLoader(async (organizationIds) => {
-            const organizations = await db('organizations').whereIn(
-                'id',
-                organizationIds
-            );
+        new DataLoader<string, Organization>(
+            async (organizationIds: string[]) => {
+                const organizations = await db('organizations').whereIn(
+                    'id',
+                    organizationIds
+                );
 
-            return organizationIds.map((organizationId) =>
-                organizations.find(
-                    (organization) =>
-                        String(organization.id) === String(organizationId)
-                )
-            );
-        });
+                return organizationIds.map((organizationId) =>
+                    organizations.find(
+                        (organization) =>
+                            String(organization.id) === String(organizationId)
+                    )
+                );
+            }
+        );
 
     const getUserOrganizations = async (userId) =>
         db

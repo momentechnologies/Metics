@@ -1,5 +1,4 @@
 import React from 'react';
-import * as Sentry from '@sentry/react';
 
 import AuthContext from '../../contexts/auth';
 import appConfig from '../../config/app.js';
@@ -16,20 +15,6 @@ const AuthProvider = ({
         !isLoggedOut && data && data.auth && data.auth.user
             ? data.auth.user
             : null;
-
-    React.useEffect(() => {
-        if (user) {
-            console.log(
-                `Setting user with sentry. id: ${user.id}, email: ${user.email}`
-            );
-            Sentry.configureScope((scope) => {
-                scope.setUser({
-                    id: user.id,
-                    email: user.email,
-                });
-            });
-        }
-    }, [user]);
 
     React.useEffect(() => {
         if (!user || appConfig.isServerSide) {

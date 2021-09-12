@@ -23,4 +23,8 @@ export const resolvers = {
         createProject: async (_, { data }, context: Context) =>
             await context.db().project.create(data),
     },
+    Group: {
+        projects: async ({ id: groupId }, _, context: Context) =>
+            context.db().project.getForGroup.load(groupId),
+    },
 };
